@@ -448,51 +448,94 @@
 </main>
 <footer class="footer"><div class="wrap"><b>AV Sales Academy</b> · Beginner learning resource · Hinglish notes<br>Not an official HP Poly or Crestron document. Confirm local product availability, exact model suffixes, compatibility, licensing, power and included accessories with your distributor/manufacturer before issuing a quotation.</div></footer>
 
-<!-- Cloudimage Hotspot Library -->
-<script src="https://cdn.cloudimage.io/hotspot/1.1.13/hotspot.min.js"></script>
+
+<!-- Styles for Interactive Image -->
+<style>
+  .custom-hotspot-wrapper { position: relative; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); background: #000; }
+  .custom-hotspot-img { width: 100%; display: block; }
+  .custom-dot { 
+    position: absolute; 
+    width: 24px; height: 24px; 
+    background-color: rgba(99, 225, 208, 0.4); 
+    border: 2px solid var(--cyan); 
+    border-radius: 50%; 
+    transform: translate(-50%, -50%); 
+    cursor: pointer; 
+    box-shadow: 0 0 10px var(--cyan);
+    transition: all 0.2s ease;
+  }
+  .custom-dot:hover { background-color: var(--cyan); transform: translate(-50%, -50%) scale(1.2); }
+  
+  /* Popup box */
+  .custom-popup {
+    position: absolute;
+    background: var(--panel2);
+    color: var(--text);
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    transform: translate(-50%, -120%);
+    z-index: 10;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px #0008;
+  }
+  .custom-popup.show { opacity: 1; }
+  .custom-popup h4 { margin: 0 0 4px; color: var(--cyan); font-size: 0.9rem; }
+  .custom-popup p { margin: 0; color: var(--muted); }
+</style>
 
 <script>
-// Copy functionality
+// Baaki saara purana code (Copy, Search, Quiz) yahan rahega
 function copyText(text){if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(()=>alert('Copied to clipboard!')).catch(()=>fallbackCopy(text));}else{fallbackCopy(text)}}
 function fallbackCopy(text){const el=document.createElement('textarea');el.value=text;el.style.position='fixed';el.style.opacity='0';document.body.appendChild(el);el.select();try{document.execCommand('copy');alert('Copied to clipboard!')}catch(e){alert('Copy not supported here. Please select and copy the text manually.')}el.remove()}
-
-// G62 Search Filter
 document.getElementById('g62search').addEventListener('input',function(){const term=this.value.toLowerCase();document.querySelectorAll('.accessory').forEach(card=>card.classList.toggle('hidden',!card.innerText.toLowerCase().includes(term)))});
-
-// Quiz Logic
 document.getElementById('quizForm').addEventListener('submit',function(e){e.preventDefault();const answers={q1:'b',q2:'a',q3:'b',q4:'b',q5:'b',q6:'a',q7:'c',q8:'b',q9:'b',q10:'b'};let score=0;Object.keys(answers).forEach(q=>{const selected=this.querySelector('input[name="'+q+'"]:checked');if(selected&&selected.value===answers[q])score++});const result=document.getElementById('quizResult');let msg=score===10?'Perfect! You have the core concepts.':score>=7?'Good start. Review the explanations and try again.':'Keep practising. Revisit the basics, X-Series and G62/AirMedia sections, then retry.';result.innerHTML='<strong>Your score: '+score+'/10</strong><br>'+msg+'<ol><li>G62 is modular and requires selected room peripherals.</li><li>TC10 is a supported touch-controller option (verify mode).</li><li>AirMedia focuses on wireless presentation and supported collaboration workflows.</li><li>Discovery comes before product recommendation.</li><li>For laptop-free meetings, evaluate a native room conferencing solution.</li><li>12×9 ft huddle room → X32 first.</li><li>X72 has dual 4K lenses (120° + 70°).</li><li>Medium room → X52, then check seating and mic coverage.</li><li>X Series runs compatible meeting apps on the room device itself.</li><li>Ask about layout and acoustics before choosing.</li></ol>';result.classList.add('show');result.scrollIntoView({behavior:'smooth',block:'nearest'})});
 
-// Interactive Hotspots Initialization (Cloudimage)
-const hotspotContainer = document.getElementById('interactive-room-image');
-if (hotspotContainer && typeof CIHotspot !== 'undefined') {
-  const viewer = new CIHotspot('#interactive-room-image', {
-    // Yahan apni actual image ka link daalein
-    src: 'https://github.com/hatimpainter/AV-Sales-Academy/blob/main/room.png?raw=true', 
-    alt: 'Meeting Room Layout',
-    trigger: 'click',
-    theme: 'dark',
-    hotspots: [
-      {
-        id: 'display',
-        x: '50%', y: '25%',
-        label: 'Display',
-        data: { title: 'Dual 55" Displays', description: 'Used for video conferencing and content sharing.', price: 'Included in BOM' }
-      },
-      {
-        id: 'camera',
-        x: '45%', y: '15%',
-        label: 'Camera',
-        data: { title: 'Poly Studio X52', description: 'All-in-one video bar with 4K camera.', price: 'Base Kit' }
-      },
-      {
-        id: 'mic',
-        x: '50%', y: '60%',
-        label: 'Table Mic',
-        data: { title: 'Poly IP Table Mic', description: 'Optional expansion microphone for longer tables.', price: 'Optional Add-on' }
-      }
-    ]
-  });
-}
+// NAYA INTERACTIVE IMAGE CODE (Bina kisi external library ke)
+document.addEventListener("DOMContentLoaded", function() {
+  const container = document.getElementById('interactive-room-image');
+  
+  if (container) {
+    container.innerHTML = `
+      <div class="custom-hotspot-wrapper">
+        <!-- Yahan apni image ka link daalein -->
+        <img src="https://github.com/hatimpainter/AV-Sales-Academy/blob/main/room.png?raw=true" alt="Meeting Room Layout" class="custom-hotspot-img">
+        
+        <!-- Display Dot -->
+        <div class="custom-dot" style="left: 50%; top: 25%;" data-info="Dual 55' Displays|Used for video conferencing and content sharing."></div>
+        
+        <!-- Camera Dot -->
+        <div class="custom-dot" style="left: 45%; top: 15%;" data-info="Poly Studio X52|All-in-one video bar with 4K camera."></div>
+        
+        <!-- Mic Dot -->
+        <div class="custom-dot" style="left: 50%; top: 60%;" data-info="Poly IP Table Mic|Optional expansion microphone for longer tables."></div>
+        
+        <div class="custom-popup" id="hotspot-popup"></div>
+      </div>
+    `;
+
+    const popup = document.getElementById('hotspot-popup');
+    const dots = document.querySelectorAll('.custom-dot');
+
+    dots.forEach(dot => {
+      dot.addEventListener('mouseenter', function() {
+        const info = this.getAttribute('data-info').split('|');
+        popup.innerHTML = `<h4>${info[0]}</h4><p>${info[1]}</p>`;
+        popup.style.left = this.style.left;
+        popup.style.top = this.style.top;
+        popup.classList.add('show');
+      });
+      
+      dot.addEventListener('mouseleave', function() {
+        popup.classList.remove('show');
+      });
+    });
+  }
+});
 </script>
 </body>
 </html>
